@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 
 const veryComplexCompute = (num) => {
   let i = 0;
@@ -6,37 +6,52 @@ const veryComplexCompute = (num) => {
   return num;
 };
 
-const App = () => {
+const App = props => {
+
   const [number, setNumber] = useState(42);
   const [colored, setColored] = useState(false);
 
-  const computed = veryComplexCompute(number);
+  /**useMemo */
+  const computed = useMemo(() => veryComplexCompute(number), [number]);
 
-  const btnStyle = { width: '30%' };
+  const color = colored ? 'grey' : 'darkgrey';
+  const styles = {
+    buttons: { width: '32%' },
+    header: {
+      textAlign: 'center',
+      flexBasis: '100%',
+      color: color,
+    },
+
+    root: {
+      width: '100%',
+      maxWidth: '400px',
+      margin: '40px auto',
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+    },
+  }
 
   return (
     <div
-      style={{
-        width: '100%',
-        maxWidth: '400px',
-        margin: '40px auto',
-      }}>
-      <h2 style={{ textAlign: 'center' }}>Calc value: {number}</h2>
+      style={styles.root}>
+      <h2 style={styles.header}>Calc value: {number}</h2>
       <button
-        style={btnStyle}
+        style={styles.buttons}
         className='btn btn-success'
         onClick={() => setNumber((prev) => prev + 1)}>
         ADD
       </button>
       <button
-        style={btnStyle}
+        style={styles.buttons}
         className='btn btn-danger'
         onClick={() => setNumber((prev) => prev - 1)}>
         DEL
       </button>
       <button
-        style={btnStyle}
-        className='btn btn-secondary'
+        style={{ ...styles.buttons, background: color }}
+        className='btn'
         onClick={() => setColored((prev) => !prev)}>
         COLOR
       </button>
